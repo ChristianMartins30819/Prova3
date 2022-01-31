@@ -1,0 +1,356 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8090
+    description: Generated server url
+paths:
+  /regiao/{id}:
+    get:
+      tags:
+        - cadastro-controller
+      operationId: detalhar
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DetalhesCadastroDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/ErroDeFormularioDto'
+                  - type: string
+    put:
+      tags:
+        - cadastro-controller
+      operationId: atualizar
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AtualizacaoCadastroForm'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CadastroDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/ErroDeFormularioDto'
+                  - type: string
+    delete:
+      tags:
+        - cadastro-controller
+      operationId: remover
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/ErroDeFormularioDto'
+                  - type: string
+  /regiao:
+    get:
+      tags:
+        - cadastro-controller
+      operationId: lista
+      parameters:
+        - name: nomeEstado
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CadastroDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/ErroDeFormularioDto'
+                  - type: string
+    post:
+      tags:
+        - cadastro-controller
+      operationId: cadastrar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CadastroForm'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CadastroDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/ErroDeFormularioDto'
+                  - type: string
+  /regiao/populacao:
+    get:
+      tags:
+        - cadastro-controller
+      operationId: listarPorPopulacao
+      parameters:
+        - name: populacao
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CadastroDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/ErroDeFormularioDto'
+                  - type: string
+  /regiao/area:
+    get:
+      tags:
+        - cadastro-controller
+      operationId: listarPorArea
+      parameters:
+        - name: area
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CadastroDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/ErroDeFormularioDto'
+                  - type: string
+  /regiao/agrupar:
+    get:
+      tags:
+        - cadastro-controller
+      operationId: listarPorRegiao
+      parameters:
+        - name: regiao
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - NORTE
+              - NORDESTE
+              - SUL
+              - SUDESTE
+              - CENTRO_OESTE
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CadastroDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/ErroDeFormularioDto'
+                  - type: string
+components:
+  schemas:
+    ErroDeFormularioDto:
+      type: object
+      properties:
+        campo:
+          type: string
+        erro:
+          type: string
+    AtualizacaoCadastroForm:
+      required:
+        - area
+        - capital
+        - nomeEstado
+        - populacao
+      type: object
+      properties:
+        nomeEstado:
+          type: string
+        populacao:
+          type: integer
+          format: int64
+        capital:
+          type: string
+        area:
+          type: integer
+          format: int64
+    CadastroDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        regiao:
+          type: string
+          enum:
+            - NORTE
+            - NORDESTE
+            - SUL
+            - SUDESTE
+            - CENTRO_OESTE
+        populacao:
+          type: integer
+          format: int64
+        capital:
+          type: string
+        area:
+          type: integer
+          format: int64
+        nomeCidade:
+          type: string
+    CadastroForm:
+      required:
+        - area
+        - capital
+        - nomeEstado
+        - populacao
+        - regiao
+      type: object
+      properties:
+        nomeEstado:
+          type: string
+        regiao:
+          type: string
+          enum:
+            - NORTE
+            - NORDESTE
+            - SUL
+            - SUDESTE
+            - CENTRO_OESTE
+        populacao:
+          type: integer
+          format: int64
+        capital:
+          type: string
+        area:
+          type: integer
+          format: int64
+    DetalhesCadastroDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        nomeEstado:
+          type: string
+        regiao:
+          type: string
+          enum:
+            - NORTE
+            - NORDESTE
+            - SUL
+            - SUDESTE
+            - CENTRO_OESTE
+        populacao:
+          type: integer
+          format: int64
+        capital:
+          type: string
+        area:
+          type: integer
+          format: int64
